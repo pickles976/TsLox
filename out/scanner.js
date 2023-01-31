@@ -6,7 +6,23 @@ const token_1 = require("./token");
 const tokentype_1 = require("./tokentype");
 let keywords = {
     "and": tokentype_1.TokenType.AND,
+    "class": tokentype_1.TokenType.CLASS,
+    "else": tokentype_1.TokenType.ELSE,
+    "false": tokentype_1.TokenType.FALSE,
+    "for": tokentype_1.TokenType.FOR,
+    "fun": tokentype_1.TokenType.FUN,
+    "if": tokentype_1.TokenType.IF,
+    "nil": tokentype_1.TokenType.NIL,
+    "or": tokentype_1.TokenType.OR,
+    "print": tokentype_1.TokenType.PRINT,
+    "return": tokentype_1.TokenType.RETURN,
+    "super": tokentype_1.TokenType.SUPER,
+    "this": tokentype_1.TokenType.THIS,
+    "true": tokentype_1.TokenType.TRUE,
+    "var": tokentype_1.TokenType.VAR,
+    "while": tokentype_1.TokenType.WHILE,
 };
+let map = new Map(Object.entries(keywords));
 class Scanner {
     constructor(source) {
         this.tokens = [];
@@ -175,7 +191,11 @@ class Scanner {
     identifier() {
         while (this.isAlphaNumeric(this.peek()))
             this.advance();
-        this.addToken(tokentype_1.TokenType.IDENTIFIER);
+        let text = this.source.substring(this.start, this.current);
+        let type = map.get(text);
+        if (type == undefined)
+            type = tokentype_1.TokenType.IDENTIFIER;
+        this.addToken(type);
     }
     isAlpha(c) {
         let s = c.charCodeAt(0);

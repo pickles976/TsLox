@@ -5,8 +5,25 @@ import { TokenType } from "./tokentype"
 let keywords = {
 
     "and" : TokenType.AND,
+    "class" : TokenType.CLASS,
+    "else" : TokenType.ELSE,
+    "false" : TokenType.FALSE,
+    "for" : TokenType.FOR,
+    "fun" : TokenType.FUN,
+    "if" : TokenType.IF,
+    "nil" : TokenType.NIL,
+    "or" : TokenType.OR,
+    "print" : TokenType.PRINT,
+    "return" : TokenType.RETURN,
+    "super" : TokenType.SUPER,
+    "this" : TokenType.THIS,
+    "true" : TokenType.TRUE,
+    "var" : TokenType.VAR,
+    "while" : TokenType.WHILE,
 
 }
+
+let map = new Map(Object.entries(keywords))
 
 export class Scanner {
 
@@ -169,7 +186,11 @@ export class Scanner {
 
     identifier() {
         while (this.isAlphaNumeric(this.peek())) this.advance()
-        this.addToken(TokenType.IDENTIFIER)
+        
+        let text: string = this.source.substring(this.start, this.current)
+        let type: TokenType | undefined = map.get(text)
+        if (type == undefined) type = TokenType.IDENTIFIER
+        this.addToken(type)
     }
 
     isAlpha(c : String) : boolean {

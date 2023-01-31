@@ -1,15 +1,17 @@
-import { Token } from './src/token' 
-class Expr {} 
-
-class Visitor { 
-    constructor(){} 
-    visitBinaryExpr(binary : Binary){}
-    visitGroupingExpr(grouping : Grouping){}
-    visitLiteralExpr(literal : Literal){}
-    visitUnaryExpr(unary : Unary){}
+import { Token } from './token' 
+export class Expr {
+    accept(visitor: Visitor) : String { return "" } 
 } 
 
-class Binary extends Expr { 
+export class Visitor { 
+    constructor(){} 
+    visitBinaryExpr(binary : Binary) : String { return "" }
+    visitGroupingExpr(grouping : Grouping) : String { return "" }
+    visitLiteralExpr(literal : Literal) : String { return "" }
+    visitUnaryExpr(unary : Unary) : String { return "" }
+} 
+
+export class Binary extends Expr { 
     left : Expr 
     operator : Token 
     right : Expr 
@@ -20,39 +22,39 @@ class Binary extends Expr {
         this.right = right; 
     } 
 
-    accept(visitor: Visitor) {
+    accept(visitor: Visitor) : String {
         return visitor.visitBinaryExpr(this)
     } 
 
 } 
  
-class Grouping extends Expr { 
+export class Grouping extends Expr { 
     expression : Expr 
     constructor(expression : Expr) { 
         super()
         this.expression = expression; 
     } 
 
-    accept(visitor: Visitor) {
+    accept(visitor: Visitor) : String {
         return visitor.visitGroupingExpr(this)
     } 
 
 } 
  
-class Literal extends Expr { 
+export class Literal extends Expr { 
     value : Object 
     constructor(value : Object) { 
         super()
         this.value = value; 
     } 
 
-    accept(visitor: Visitor) {
+    accept(visitor: Visitor) : String {
         return visitor.visitLiteralExpr(this)
     } 
 
 } 
  
-class Unary extends Expr { 
+export class Unary extends Expr { 
     operator : Token 
     right : Expr 
     constructor(operator : Token,right : Expr) { 
@@ -61,7 +63,7 @@ class Unary extends Expr {
         this.right = right; 
     } 
 
-    accept(visitor: Visitor) {
+    accept(visitor: Visitor) : String {
         return visitor.visitUnaryExpr(this)
     } 
 

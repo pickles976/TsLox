@@ -4,10 +4,10 @@ export class Token {
 
     type: TokenType
     lexeme: String
-    literal: Object
+    literal: Object | null
     line: number
 
-    constructor(type: TokenType, lexeme: String, literal: Object, line: number) {
+    constructor(type: TokenType, lexeme: String, literal: Object | null, line: number) {
         this.type = type
         this.lexeme = lexeme
         this.literal = literal

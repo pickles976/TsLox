@@ -25,9 +25,11 @@ defineAst(dir, "Expr", [
 function defineAst(dir, baseName, types) {
     let path = dir + "/" + baseName + ".ts"
 
-    let content = "import { Token } from './src/token' \n"
+    let content = "import { Token } from './token' \n"
 
-    content += `class ${baseName} {} \n\n`
+    content += `export class ${baseName} {\n`
+    content += `    accept(visitor: Visitor) : String { return "" } \n` 
+    content += `} \n\n`
 
     content += defineVisitor(baseName, types)
 
@@ -51,7 +53,7 @@ function defineType(baseName, className, fields) {
     let fieldArray = fields.split(",")
 
     // class w/ constructor
-    content += `class ${className} extends ${baseName} { \n`
+    content += `export class ${className} extends ${baseName} { \n`
 
     fieldArray.forEach((field) => {
         let name = field.split(" ")
@@ -70,7 +72,7 @@ function defineType(baseName, className, fields) {
     content += '    } \n\n'
 
     // visitor
-    content += `    accept(visitor: Visitor) {\n`
+    content += `    accept(visitor: Visitor) : String {\n`
     content += `        return visitor.visit${className}${baseName}(this)\n`
     content += `    } \n\n`
 
@@ -81,12 +83,12 @@ function defineType(baseName, className, fields) {
 
 function defineVisitor(baseName, types) {
 
-    let content = "class Visitor { \n    constructor(){} \n"
+    let content = "export class Visitor { \n    constructor(){} \n"
 
 
     types.forEach((element) => {
         let typeName = element.split(":")[0].trim()
-        content += `    visit${typeName}${baseName}(${typeName.toLowerCase()} : ${typeName}){}\n`
+        content += `    visit${typeName}${baseName}(${typeName.toLowerCase()} : ${typeName}) : String { return "" }\n`
     })
 
     content += "} \n\n"

@@ -117,10 +117,10 @@ export class Scanner {
     }
 
     addToken(type: TokenType) {
-        this.addTokenLit(type, {})
+        this.addTokenLit(type, null)
     }
 
-    addTokenLit(type: TokenType, literal: Object) {
+    addTokenLit(type: TokenType, literal: Object | null) {
         let text : String = this.source.substring(this.start, this.current)
         this.tokens.push(new Token(type, text, literal, this.line))
     }

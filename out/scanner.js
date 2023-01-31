@@ -130,7 +130,7 @@ class Scanner {
         return this.source.charAt(this.current++);
     }
     addToken(type) {
-        this.addTokenLit(type, {});
+        this.addTokenLit(type, null);
     }
     addTokenLit(type, literal) {
         let text = this.source.substring(this.start, this.current);

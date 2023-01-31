@@ -11,6 +11,7 @@ let hadError = false
 args.shift()
 args.shift()
   
+
 if (args.length > 1) {
   console.log("Usage: jlox [script]")
   process.exit()

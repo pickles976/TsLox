@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * Represents a Grammar structure
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Unary = exports.Literal = exports.Grouping = exports.Binary = exports.Visitor = exports.Expr = void 0;
 class Expr {

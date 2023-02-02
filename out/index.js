@@ -1,7 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.error = void 0;
+exports.report = exports.parseError = exports.error = void 0;
 const scanner_1 = require("./scanner");
+const tokentype_1 = require("./tokentype");
+const Parser_1 = require("./Parser");
+const Expr_1 = require("./Expr");
+const AstPrinter_1 = require("./AstPrinter");
 const { readFile } = require('fs/promises');
 const input = require('prompt-sync')();
 let args = process.argv;
@@ -39,15 +43,30 @@ function runPrompt() {
     }
 }
 function run(source) {
+    var _a;
     let scanner = new scanner_1.Scanner(source);
     let tokens = scanner.scanTokens();
-    tokens.forEach((token) => console.log(token));
+    let parser = new Parser_1.Parser(tokens);
+    let expression = (_a = parser.parse()) !== null && _a !== void 0 ? _a : new Expr_1.Expr();
+    if (hadError)
+        return;
+    console.log(new AstPrinter_1.AstPrinter().print(expression));
 }
 function error(line, message) {
     report(line, "", message);
 }
 exports.error = error;
+function parseError(token, message) {
+    if (token.type == tokentype_1.TokenType.EOF) {
+        report(token.line, " at end", message);
+    }
+    else {
+        report(token.line, ` at '${token.lexeme}'`, message);
+    }
+}
+exports.parseError = parseError;
 function report(line, where, message) {
     process.emitWarning(`[Line ${line}] Error ${where}: ${message}`);
     hadError = true;
 }
+exports.report = report;

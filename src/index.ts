@@ -1,5 +1,9 @@
 import { Token } from "./token";
 import { Scanner } from "./scanner";
+import { TokenType } from "./tokentype";
+import { Parser } from "./Parser";
+import { Expr } from "./Expr";
+import { AstPrinter } from "./AstPrinter";
 
 const { readFile } = require('fs/promises')
 const input = require('prompt-sync')();
@@ -44,8 +48,12 @@ function run(source: String) {
 
   let scanner: Scanner = new Scanner(source)
   let tokens: Token[] = scanner.scanTokens()
+  let parser: Parser = new Parser(tokens)
+  let expression: Expr = parser.parse() ?? new Expr()
 
-  tokens.forEach((token) => console.log(token))
+  if (hadError) return
+
+  console.log(new AstPrinter().print(expression))
 
 }
 
@@ -53,7 +61,15 @@ export function error(line: number, message: String) {
   report(line, "", message)
 }
 
-function report(line: number, where: String, message: String) {
+export function parseError(token: Token, message: String) {
+  if (token.type == TokenType.EOF) {
+      report(token.line, " at end", message)
+  } else {
+      report(token.line, ` at '${token.lexeme}'`, message)
+  }
+}
+
+export function report(line: number, where: String, message: String) {
   process.emitWarning(`[Line ${line}] Error ${where}: ${message}`)
   hadError = true
 }

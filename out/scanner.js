@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * Scans source text into an array of Tokens5tr
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Scanner = void 0;
 const _1 = require(".");

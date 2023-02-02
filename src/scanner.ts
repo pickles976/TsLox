@@ -1,3 +1,7 @@
+/**
+ * Scans source text into an array of Tokens5tr
+ */
+
 import { error } from "."
 import { Token } from "./token"
 import { TokenType } from "./tokentype"

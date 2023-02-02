@@ -1,3 +1,7 @@
+/**
+ * Represents a Grammar structure
+ */
+
 import { Token } from './token' 
 export class Expr {
     accept(visitor: Visitor) : String { return "" } 
@@ -42,8 +46,8 @@ export class Grouping extends Expr {
 } 
  
 export class Literal extends Expr { 
-    value : Object 
-    constructor(value : Object) { 
+    value : Object | null
+    constructor(value : Object | null) { 
         super()
         this.value = value; 
     } 

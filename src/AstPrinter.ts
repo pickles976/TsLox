@@ -2,7 +2,7 @@ import { Binary, Expr, Grouping, Literal, Unary, Visitor } from "./Expr";
 import { Token } from "./token";
 import { TokenType } from "./tokentype";
 
-class AstPrinter extends Visitor {
+export class AstPrinter extends Visitor {
 
     constructor(){
         super()
@@ -44,15 +44,15 @@ class AstPrinter extends Visitor {
 }
 
 
-// main
-let expression : Expr = new Binary(new Unary(
-                            new Token(TokenType.MINUS, "-", null, 1),
-                            new Literal(123)),
-                        new Token(TokenType.STAR, "*", null, 1),
-                        new Grouping(
-                            new Literal(45.67)
-                        ))
+// // main
+// let expression : Expr = new Binary(new Unary(
+//                             new Token(TokenType.MINUS, "-", null, 1),
+//                             new Literal(123)),
+//                         new Token(TokenType.STAR, "*", null, 1),
+//                         new Grouping(
+//                             new Literal(45.67)
+//                         ))
 
-let printer = new AstPrinter()
+// let printer = new AstPrinter()
 
-console.log(printer.print(expression))
+// console.log(printer.print(expression))

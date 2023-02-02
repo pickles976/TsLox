@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AstPrinter = void 0;
 const Expr_1 = require("./Expr");
-const token_1 = require("./token");
-const tokentype_1 = require("./tokentype");
 class AstPrinter extends Expr_1.Visitor {
     constructor() {
         super();
@@ -35,7 +34,14 @@ class AstPrinter extends Expr_1.Visitor {
         return content;
     }
 }
-// main
-let expression = new Expr_1.Binary(new Expr_1.Unary(new token_1.Token(tokentype_1.TokenType.MINUS, "-", null, 1), new Expr_1.Literal(123)), new token_1.Token(tokentype_1.TokenType.STAR, "*", null, 1), new Expr_1.Grouping(new Expr_1.Literal(45.67)));
-let printer = new AstPrinter();
-console.log(printer.print(expression));
+exports.AstPrinter = AstPrinter;
+// // main
+// let expression : Expr = new Binary(new Unary(
+//                             new Token(TokenType.MINUS, "-", null, 1),
+//                             new Literal(123)),
+//                         new Token(TokenType.STAR, "*", null, 1),
+//                         new Grouping(
+//                             new Literal(45.67)
+//                         ))
+// let printer = new AstPrinter()
+// console.log(printer.print(expression))

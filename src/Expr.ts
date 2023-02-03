@@ -4,15 +4,15 @@
 
 import { Token } from './token' 
 export class Expr {
-    accept(visitor: Visitor) : String { return "" } 
+    accept(visitor: Visitor) : any { return "" } 
 } 
 
 export class Visitor { 
     constructor(){} 
-    visitBinaryExpr(binary : Binary) : String { return "" }
-    visitGroupingExpr(grouping : Grouping) : String { return "" }
-    visitLiteralExpr(literal : Literal) : String { return "" }
-    visitUnaryExpr(unary : Unary) : String { return "" }
+    visitBinaryExpr(binary : Binary) : Object | null { return "" }
+    visitGroupingExpr(grouping : Grouping) : Object { return "" }
+    visitLiteralExpr(literal : Literal) : Object | null { return "" }
+    visitUnaryExpr(unary : Unary) : Object | null { return "" }
 } 
 
 export class Binary extends Expr { 
@@ -26,7 +26,7 @@ export class Binary extends Expr {
         this.right = right; 
     } 
 
-    accept(visitor: Visitor) : String {
+    accept(visitor: Visitor) : Object | null {
         return visitor.visitBinaryExpr(this)
     } 
 
@@ -39,7 +39,7 @@ export class Grouping extends Expr {
         this.expression = expression; 
     } 
 
-    accept(visitor: Visitor) : String {
+    accept(visitor: Visitor) : Object {
         return visitor.visitGroupingExpr(this)
     } 
 
@@ -52,7 +52,7 @@ export class Literal extends Expr {
         this.value = value; 
     } 
 
-    accept(visitor: Visitor) : String {
+    accept(visitor: Visitor) : Object | null {
         return visitor.visitLiteralExpr(this)
     } 
 
@@ -67,7 +67,7 @@ export class Unary extends Expr {
         this.right = right; 
     } 
 
-    accept(visitor: Visitor) : String {
+    accept(visitor: Visitor) : Object | null {
         return visitor.visitUnaryExpr(this)
     } 
 

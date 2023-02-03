@@ -4,10 +4,12 @@ import { TokenType } from "./tokentype";
 import { Parser } from "./Parser";
 import { Expr } from "./Expr";
 import { AstPrinter } from "./AstPrinter";
+import { Interpreter } from "./Interpreter";
 
 const { readFile } = require('fs/promises')
 const input = require('prompt-sync')();
 
+const intepreter : Interpreter = new Interpreter()
 let args: String[] = process.argv
 let hadError = false
 
@@ -53,7 +55,7 @@ function run(source: String) {
 
   if (hadError) return
 
-  console.log(new AstPrinter().print(expression))
+  intepreter.interpret(expression)
 
 }
 

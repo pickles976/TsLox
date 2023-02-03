@@ -5,9 +5,10 @@ const scanner_1 = require("./scanner");
 const tokentype_1 = require("./tokentype");
 const Parser_1 = require("./Parser");
 const Expr_1 = require("./Expr");
-const AstPrinter_1 = require("./AstPrinter");
+const Interpreter_1 = require("./Interpreter");
 const { readFile } = require('fs/promises');
 const input = require('prompt-sync')();
+const intepreter = new Interpreter_1.Interpreter();
 let args = process.argv;
 let hadError = false;
 // remove node and code from args
@@ -50,7 +51,7 @@ function run(source) {
     let expression = (_a = parser.parse()) !== null && _a !== void 0 ? _a : new Expr_1.Expr();
     if (hadError)
         return;
-    console.log(new AstPrinter_1.AstPrinter().print(expression));
+    intepreter.interpret(expression);
 }
 function error(line, message) {
     report(line, "", message);

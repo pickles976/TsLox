@@ -1,9 +1,6 @@
 (1 + 2) * 3
-
 if (x == 3) {
     print x
 } 
-
 var y = 12 * 3
-
 print y

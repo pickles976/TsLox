@@ -1,10 +1,10 @@
-import { match } from "assert";
-import { Binary, Expr, Grouping, Literal, Unary } from "./Expr";
+import { equal, match } from "assert";
+import { Assign, Binary, Expr, Grouping, Literal, Unary, Variable } from "./Expr";
 import { Token } from "./token";
 import { TokenType } from "./tokentype";
 import { parseError } from ".";
 import { type } from "os";
-import { Expression, Print, Stmt } from "./Stmt";
+import { Expression, Print, Stmt, Var } from "./Stmt";
 
 export class Parser {
 
@@ -18,9 +18,35 @@ export class Parser {
     parse() : Stmt[] {
         let statements = []
         while (!this.isAtEnd()) {
-            statements.push(this.statement())
+            // statements.push(this.statement())
+            statements.push(this.declaration())
         }
         return statements
+    }
+
+    declaration() : Stmt {
+        try {
+            if (this.match(TokenType.VAR)) {
+                return this.varDeclaration()
+            }
+            return this.statement()
+        } catch (err) {
+            this.synchronize()
+            return new Stmt()
+        }
+    }
+
+    varDeclaration() : Stmt {
+        let name : Token = this.consume(TokenType.IDENTIFIER, "Expect variable name")
+
+        let initializer : Expr = new Expr()
+
+        if (this.match(TokenType.EQUAL)) {
+            initializer = this.expression()
+        }
+
+        this.consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.")
+        return new Var(name, initializer)
     }
 
     statement() : Stmt {
@@ -41,7 +67,25 @@ export class Parser {
     }
 
     expression() : Expr {
-        return this.equality()
+        return this.assignment()
+    }
+
+    assignment() {
+    
+        let expr = this.equality()
+
+        if (this.match(TokenType.EQUAL)) {
+            let equals: Token = this.previous()
+            let value: Expr = this.assignment()
+
+            if (expr instanceof Variable) {
+                let name : Token = new Variable(expr.name).name
+                return new Assign(name, value)
+            }
+
+            this.error(equals, "Invalid assignment target")
+        }
+        return expr
     }
 
     // == | !=
@@ -113,6 +157,10 @@ export class Parser {
         if (this.match(TokenType.NIL)) { return new Literal(null) }
 
         if (this.match(TokenType.NUMBER, TokenType.STRING))  { return new Literal(this.previous().literal) }
+
+        if (this.match(TokenType.IDENTIFIER)) {
+            return new Variable(this.previous())
+        }
 
         if (this.match(TokenType.LEFT_PAREN)) {
             let expr : Expr = this.expression()

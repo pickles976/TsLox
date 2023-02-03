@@ -3,18 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Interpreter = void 0;
 const Expr_1 = require("./Expr");
 const tokentype_1 = require("./tokentype");
+const Environment_1 = require("./Environment");
 class Interpreter extends Expr_1.Visitor {
     constructor() {
         super();
+        this.environment = new Environment_1.Environment();
     }
-    interpret(expression) {
+    interpret(statements) {
         try {
-            let value = this.evaluate(expression);
-            console.log(this.stringify(value));
+            statements.forEach((statement) => {
+                this.execute(statement);
+            });
         }
         catch (err) {
             console.error(err);
         }
+    }
+    execute(stmt) {
+        stmt.accept(this);
     }
     stringify(object) {
         if (object == null)
@@ -43,6 +49,9 @@ class Interpreter extends Expr_1.Visitor {
                 return -(+right);
         }
         return null;
+    }
+    visitVariableExpr(expr) {
+        return this.environment.get(expr.name);
     }
     visitBinaryExpr(expr) {
         let left = this.evaluate(expr.left);
@@ -75,6 +84,23 @@ class Interpreter extends Expr_1.Visitor {
             case tokentype_1.TokenType.STAR:
                 return +left * +right;
         }
+        return null;
+    }
+    visitExpressionStmt(expr) {
+        this.evaluate(expr.expression);
+        return null;
+    }
+    visitPrintStmt(print) {
+        let val = this.evaluate(print.expression);
+        console.log(this.stringify(val));
+        return null;
+    }
+    visitVarStmt(stmt) {
+        let value = null;
+        if (stmt.initializer != null) {
+            value = this.evaluate(stmt.initializer);
+        }
+        this.environment.define(stmt.name.lexeme, value);
         return null;
     }
     evaluate(expr) {

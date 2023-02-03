@@ -13,9 +13,31 @@ class Parser {
     parse() {
         let statements = [];
         while (!this.isAtEnd()) {
-            statements.push(this.statement());
+            // statements.push(this.statement())
+            statements.push(this.declaration());
         }
         return statements;
+    }
+    declaration() {
+        try {
+            if (this.match(tokentype_1.TokenType.VAR)) {
+                return this.varDeclaration();
+            }
+            return this.statement();
+        }
+        catch (err) {
+            this.synchronize();
+            return new Stmt_1.Stmt();
+        }
+    }
+    varDeclaration() {
+        let name = this.consume(tokentype_1.TokenType.IDENTIFIER, "Expect variable name");
+        let initializer = new Expr_1.Expr();
+        if (this.match(tokentype_1.TokenType.EQUAL)) {
+            initializer = this.expression();
+        }
+        this.consume(tokentype_1.TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+        return new Stmt_1.Var(name, initializer);
     }
     statement() {
         if (this.match(tokentype_1.TokenType.PRINT))
@@ -97,6 +119,9 @@ class Parser {
         }
         if (this.match(tokentype_1.TokenType.NUMBER, tokentype_1.TokenType.STRING)) {
             return new Expr_1.Literal(this.previous().literal);
+        }
+        if (this.match(tokentype_1.TokenType.IDENTIFIER)) {
+            return new Expr_1.Variable(this.previous());
         }
         if (this.match(tokentype_1.TokenType.LEFT_PAREN)) {
             let expr = this.expression();

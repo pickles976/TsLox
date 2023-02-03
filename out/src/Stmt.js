@@ -1,16 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Print = exports.Expression = exports.Visitor = exports.Stmt = void 0;
+exports.Var = exports.Print = exports.Expression = exports.Stmt = void 0;
 class Stmt {
-    accept(visitor) { return ""; }
+    accept(visitor) { return null; }
 }
 exports.Stmt = Stmt;
-class Visitor {
-    constructor() { }
-    visitExpressionStmt(expression) { return ""; }
-    visitPrintStmt(print) { return ""; }
-}
-exports.Visitor = Visitor;
 class Expression extends Stmt {
     constructor(expression) {
         super();
@@ -31,3 +25,14 @@ class Print extends Stmt {
     }
 }
 exports.Print = Print;
+class Var extends Stmt {
+    constructor(name, initializer) {
+        super();
+        this.name = name;
+        this.initializer = initializer;
+    }
+    accept(visitor) {
+        return visitor.visitVarStmt(this);
+    }
+}
+exports.Var = Var;

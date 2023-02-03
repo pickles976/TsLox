@@ -16,15 +16,18 @@ if (args.length != 1) {
 let dir = args[0]
 
 defineAst(dir, "Expr", [
+    "Assign : name Token,value Expr",
     "Binary : left Expr,operator Token,right Expr",
     "Grouping : expression Expr",
     "Literal : value Object",
-    "Unary : operator Token,right Expr"
+    "Unary : operator Token,right Expr",
+    "Variable : name Token"
 ])
 
 defineAst(dir, "Stmt", [
     "Expression : expression Expr",
-    "Print : expression Expr"
+    "Print : expression Expr",
+    "Var : name Token,initializer Expr"
 ])
 
 function defineAst(dir, baseName, types) {

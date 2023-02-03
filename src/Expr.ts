@@ -2,7 +2,7 @@
  * Represents a Grammar structure
  */
 
-import { Expression, Print } from './Stmt'
+import { Expression, Print, Var } from './Stmt'
 import { Token } from './token' 
 export class Expr {
     accept(visitor: Visitor) : any { return "" } 
@@ -10,12 +10,30 @@ export class Expr {
 
 export class Visitor { 
     constructor(){} 
+    visitAssignExpr(assign: Assign) : Object | null { return "" }
     visitBinaryExpr(binary : Binary) : Object | null { return "" }
     visitGroupingExpr(grouping : Grouping) : Object { return "" }
     visitLiteralExpr(literal : Literal) : Object | null { return "" }
     visitUnaryExpr(unary : Unary) : Object | null { return "" }
     visitExpressionStmt(expression : Expression) : null { return null }
     visitPrintStmt(print : Print) : null { return null }
+    visitVarStmt(variable : Var) : null { return null }
+    visitVariableExpr(variable : Variable) : Object | null { return "" }
+} 
+
+export class Assign extends Expr { 
+    name : Token 
+    value : Expr 
+    constructor(name : Token,value : Expr) { 
+        super()
+        this.name = name; 
+        this.value = value; 
+    } 
+
+    accept(visitor: Visitor) : Object | null {
+        return visitor.visitAssignExpr(this)
+    } 
+
 } 
 
 export class Binary extends Expr { 
@@ -72,6 +90,19 @@ export class Unary extends Expr {
 
     accept(visitor: Visitor) : Object | null {
         return visitor.visitUnaryExpr(this)
+    } 
+
+} 
+ 
+export class Variable extends Expr { 
+    name : Token 
+    constructor(name : Token) { 
+        super()
+        this.name = name; 
+    } 
+
+    accept(visitor: Visitor) : Object | null {
+        return visitor.visitVariableExpr(this)
     } 
 
 } 

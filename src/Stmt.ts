@@ -2,14 +2,8 @@ import { Expr, Visitor } from './Expr'
 import { Token } from './token' 
 
 export class Stmt {
-    accept(visitor: Visitor) : null { return null } 
+    accept(visitor: Visitor) : any { return null } 
 } 
-
-// export class Visitor { 
-//     constructor(){} 
-//     visitExpressionStmt(expression : Expression) : String { return "" }
-//     visitPrintStmt(print : Print) : String { return "" }
-// } 
 
 export class Expression extends Stmt { 
     expression : Expr 
@@ -33,6 +27,21 @@ export class Print extends Stmt {
 
     accept(visitor: Visitor) : null {
         return visitor.visitPrintStmt(this)
+    } 
+
+} 
+
+export class Var extends Stmt { 
+    name : Token 
+    initializer : Expr 
+    constructor(name : Token,initializer : Expr) { 
+        super()
+        this.name = name; 
+        this.initializer = initializer; 
+    } 
+
+    accept(visitor: Visitor) : null {
+        return visitor.visitVarStmt(this)
     } 
 
 } 

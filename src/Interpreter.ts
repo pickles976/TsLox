@@ -1,10 +1,13 @@
 import { stringify } from "querystring";
-import { Visitor, Literal, Grouping, Expr, Unary, Binary } from "./Expr";
+import { Visitor, Literal, Grouping, Expr, Unary, Binary, Variable, Assign } from "./Expr";
 import { Token } from "./token";
 import { TokenType } from "./tokentype";
-import { Expression, Print, Stmt } from "./Stmt";
+import { Expression, Print, Stmt, Var } from "./Stmt";
+import { Environment } from "./Environment";
 
 export class Interpreter extends Visitor {
+
+    environment : Environment = new Environment()
 
     constructor(){
         super()
@@ -36,6 +39,12 @@ export class Interpreter extends Visitor {
         return object.toString()
     }
 
+    visitAssignExpr(expr: Assign): Object | null {
+        let value: Object = this.evaluate(expr.value)
+        this.environment.assign(expr.name, value)
+        return value
+    }
+
     visitLiteralExpr(expr: Literal) : Object | null {
         return expr.value
     }
@@ -55,6 +64,10 @@ export class Interpreter extends Visitor {
         }
 
         return null
+    }
+
+    visitVariableExpr(expr: Variable): Object | null {
+        return this.environment.get(expr.name)
     }
 
     visitBinaryExpr(expr: Binary): Object | null {
@@ -102,6 +115,15 @@ export class Interpreter extends Visitor {
     visitPrintStmt(print: Print): null {
         let val = this.evaluate(print.expression)
         console.log(this.stringify(val))
+        return null
+    }
+
+    visitVarStmt(stmt: Var): null {
+        let value = null
+        if(stmt.initializer != null) {
+            value = this.evaluate(stmt.initializer)
+        } 
+        this.environment.define(stmt.name.lexeme, value)
         return null
     }
 

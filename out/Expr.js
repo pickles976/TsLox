@@ -3,21 +3,35 @@
  * Represents a Grammar structure
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Unary = exports.Literal = exports.Grouping = exports.Binary = exports.Visitor = exports.Expr = void 0;
+exports.Variable = exports.Unary = exports.Literal = exports.Grouping = exports.Binary = exports.Assign = exports.Visitor = exports.Expr = void 0;
 class Expr {
     accept(visitor) { return ""; }
 }
 exports.Expr = Expr;
 class Visitor {
     constructor() { }
+    visitAssignExpr(assign) { return ""; }
     visitBinaryExpr(binary) { return ""; }
     visitGroupingExpr(grouping) { return ""; }
     visitLiteralExpr(literal) { return ""; }
     visitUnaryExpr(unary) { return ""; }
     visitExpressionStmt(expression) { return null; }
     visitPrintStmt(print) { return null; }
+    visitVarStmt(variable) { return null; }
+    visitVariableExpr(variable) { return ""; }
 }
 exports.Visitor = Visitor;
+class Assign extends Expr {
+    constructor(name, value) {
+        super();
+        this.name = name;
+        this.value = value;
+    }
+    accept(visitor) {
+        return visitor.visitAssignExpr(this);
+    }
+}
+exports.Assign = Assign;
 class Binary extends Expr {
     constructor(left, operator, right) {
         super();
@@ -61,3 +75,13 @@ class Unary extends Expr {
     }
 }
 exports.Unary = Unary;
+class Variable extends Expr {
+    constructor(name) {
+        super();
+        this.name = name;
+    }
+    accept(visitor) {
+        return visitor.visitVariableExpr(this);
+    }
+}
+exports.Variable = Variable;

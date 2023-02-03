@@ -3,9 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Interpreter = void 0;
 const Expr_1 = require("./Expr");
 const tokentype_1 = require("./tokentype");
+const Environment_1 = require("./Environment");
 class Interpreter extends Expr_1.Visitor {
     constructor() {
         super();
+        this.environment = new Environment_1.Environment();
     }
     interpret(statements) {
         try {
@@ -32,6 +34,11 @@ class Interpreter extends Expr_1.Visitor {
         }
         return object.toString();
     }
+    visitAssignExpr(expr) {
+        let value = this.evaluate(expr.value);
+        this.environment.assign(expr.name, value);
+        return value;
+    }
     visitLiteralExpr(expr) {
         return expr.value;
     }
@@ -47,6 +54,9 @@ class Interpreter extends Expr_1.Visitor {
                 return -(+right);
         }
         return null;
+    }
+    visitVariableExpr(expr) {
+        return this.environment.get(expr.name);
     }
     visitBinaryExpr(expr) {
         let left = this.evaluate(expr.left);
@@ -88,6 +98,14 @@ class Interpreter extends Expr_1.Visitor {
     visitPrintStmt(print) {
         let val = this.evaluate(print.expression);
         console.log(this.stringify(val));
+        return null;
+    }
+    visitVarStmt(stmt) {
+        let value = null;
+        if (stmt.initializer != null) {
+            value = this.evaluate(stmt.initializer);
+        }
+        this.environment.define(stmt.name.lexeme, value);
         return null;
     }
     evaluate(expr) {

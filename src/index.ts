@@ -5,6 +5,7 @@ import { Parser } from "./Parser";
 import { Expr } from "./Expr";
 import { AstPrinter } from "./AstPrinter";
 import { Interpreter } from "./Interpreter";
+import { Stmt } from "./Stmt";
 
 const { readFile } = require('fs/promises')
 const input = require('prompt-sync')();
@@ -51,11 +52,11 @@ function run(source: String) {
   let scanner: Scanner = new Scanner(source)
   let tokens: Token[] = scanner.scanTokens()
   let parser: Parser = new Parser(tokens)
-  let expression: Expr = parser.parse() ?? new Expr()
+  let statements: Stmt[] = parser.parse() ?? [new Expr()]
 
   if (hadError) return
 
-  intepreter.interpret(expression)
+  intepreter.interpret(statements)
 
 }
 

@@ -2,6 +2,7 @@
  * Represents a Grammar structure
  */
 
+import { Expression, Print } from './Stmt'
 import { Token } from './token' 
 export class Expr {
     accept(visitor: Visitor) : any { return "" } 
@@ -13,6 +14,8 @@ export class Visitor {
     visitGroupingExpr(grouping : Grouping) : Object { return "" }
     visitLiteralExpr(literal : Literal) : Object | null { return "" }
     visitUnaryExpr(unary : Unary) : Object | null { return "" }
+    visitExpressionStmt(expression : Expression) : null { return null }
+    visitPrintStmt(print : Print) : null { return null }
 } 
 
 export class Binary extends Expr { 

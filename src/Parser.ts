@@ -4,6 +4,7 @@ import { Token } from "./token";
 import { TokenType } from "./tokentype";
 import { parseError } from ".";
 import { type } from "os";
+import { Expression, Print, Stmt } from "./Stmt";
 
 export class Parser {
 
@@ -14,12 +15,29 @@ export class Parser {
         this.tokens = tokens
     }
 
-    parse() : Expr | null {
-        try {
-            return this.expression()
-        } catch (error) {
-            return null
+    parse() : Stmt[] {
+        let statements = []
+        while (!this.isAtEnd()) {
+            statements.push(this.statement())
         }
+        return statements
+    }
+
+    statement() : Stmt {
+        if (this.match(TokenType.PRINT)) return this.printStatement()
+        return this.expressionStatement()
+    }
+
+    expressionStatement() : Stmt {
+        let expr : Expr = this.expression()
+        this.consume(TokenType.SEMICOLON, "Expect ';' adter expression.")
+        return new Expression(expr)
+    }
+
+    printStatement() : Stmt {
+        let value : Expr = this.expression()
+        this.consume(TokenType.SEMICOLON, "Expect ';' after value.")
+        return new Print(value)
     }
 
     expression() : Expr {

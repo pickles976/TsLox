@@ -7,18 +7,14 @@ class Interpreter extends Expr_1.Visitor {
     constructor() {
         super();
     }
-    interpret(statements) {
+    interpret(expression) {
         try {
-            statements.forEach((statement) => {
-                this.execute(statement);
-            });
+            let value = this.evaluate(expression);
+            console.log(this.stringify(value));
         }
         catch (err) {
             console.error(err);
         }
-    }
-    execute(stmt) {
-        stmt.accept(this);
     }
     stringify(object) {
         if (object == null)
@@ -79,15 +75,6 @@ class Interpreter extends Expr_1.Visitor {
             case tokentype_1.TokenType.STAR:
                 return +left * +right;
         }
-        return null;
-    }
-    visitExpressionStmt(expr) {
-        this.evaluate(expr.expression);
-        return null;
-    }
-    visitPrintStmt(print) {
-        let val = this.evaluate(print.expression);
-        console.log(this.stringify(val));
         return null;
     }
     evaluate(expr) {

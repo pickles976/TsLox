@@ -2,6 +2,7 @@ import { stringify } from "querystring";
 import { Visitor, Literal, Grouping, Expr, Unary, Binary } from "./Expr";
 import { Token } from "./token";
 import { TokenType } from "./tokentype";
+import { Expression, Print, Stmt } from "./Stmt";
 
 export class Interpreter extends Visitor {
 
@@ -9,13 +10,18 @@ export class Interpreter extends Visitor {
         super()
     }
 
-    interpret(expression: Expr) {
+    interpret(statements: Stmt[]) {
         try {
-            let value : Object = this.evaluate(expression)
-            console.log(this.stringify(value))
+            statements.forEach((statement) => {
+                this.execute(statement)
+            })
         } catch (err) {
             console.error(err)
         }
+    }
+
+    execute(stmt: Stmt) {
+        stmt.accept(this)
     }
 
     stringify(object: Object | null) : String {
@@ -85,6 +91,17 @@ export class Interpreter extends Visitor {
                 return +left * +right
         }
 
+        return null
+    }
+
+    visitExpressionStmt(expr: Expression): null {
+        this.evaluate(expr.expression)
+        return null
+    }
+
+    visitPrintStmt(print: Print): null {
+        let val = this.evaluate(print.expression)
+        console.log(this.stringify(val))
         return null
     }
 

@@ -22,6 +22,11 @@ defineAst(dir, "Expr", [
     "Unary : operator Token,right Expr"
 ])
 
+defineAst(dir, "Stmt", [
+    "Expression : expression Expr",
+    "Print : expression Expr"
+])
+
 function defineAst(dir, baseName, types) {
     let path = dir + "/" + baseName + ".ts"
 

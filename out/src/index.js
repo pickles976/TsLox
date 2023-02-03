@@ -48,10 +48,10 @@ function run(source) {
     let scanner = new scanner_1.Scanner(source);
     let tokens = scanner.scanTokens();
     let parser = new Parser_1.Parser(tokens);
-    let statements = (_a = parser.parse()) !== null && _a !== void 0 ? _a : [new Expr_1.Expr()];
+    let expression = (_a = parser.parse()) !== null && _a !== void 0 ? _a : new Expr_1.Expr();
     if (hadError)
         return;
-    intepreter.interpret(statements);
+    intepreter.interpret(expression);
 }
 function error(line, message) {
     report(line, "", message);

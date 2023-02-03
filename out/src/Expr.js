@@ -14,8 +14,6 @@ class Visitor {
     visitGroupingExpr(grouping) { return ""; }
     visitLiteralExpr(literal) { return ""; }
     visitUnaryExpr(unary) { return ""; }
-    visitExpressionStmt(expression) { return null; }
-    visitPrintStmt(print) { return null; }
 }
 exports.Visitor = Visitor;
 class Binary extends Expr {

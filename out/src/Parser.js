@@ -55,7 +55,20 @@ class Parser {
         return new Stmt_1.Print(value);
     }
     expression() {
-        return this.equality();
+        return this.assignment();
+    }
+    assignment() {
+        let expr = this.equality();
+        if (this.match(tokentype_1.TokenType.EQUAL)) {
+            let equals = this.previous();
+            let value = this.assignment();
+            if (expr instanceof Expr_1.Variable) {
+                let name = new Expr_1.Variable(expr.name).name;
+                return new Expr_1.Assign(name, value);
+            }
+            this.error(equals, "Invalid assignment target");
+        }
+        return expr;
     }
     // == | !=
     equality() {

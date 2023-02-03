@@ -10,6 +10,7 @@ class Expr {
 exports.Expr = Expr;
 class Visitor {
     constructor() { }
+    visitBlockStmt(block) { return null; }
     visitAssignExpr(assign) { return ""; }
     visitBinaryExpr(binary) { return ""; }
     visitGroupingExpr(grouping) { return ""; }

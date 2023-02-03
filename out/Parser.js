@@ -13,7 +13,6 @@ class Parser {
     parse() {
         let statements = [];
         while (!this.isAtEnd()) {
-            // statements.push(this.statement())
             statements.push(this.declaration());
         }
         return statements;
@@ -42,11 +41,21 @@ class Parser {
     statement() {
         if (this.match(tokentype_1.TokenType.PRINT))
             return this.printStatement();
+        if (this.match(tokentype_1.TokenType.LEFT_BRACE))
+            return new Stmt_1.Block(this.block());
         return this.expressionStatement();
+    }
+    block() {
+        let statements = [];
+        while (!this.check(tokentype_1.TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+            statements.push(this.declaration());
+        }
+        this.consume(tokentype_1.TokenType.RIGHT_BRACE, "Expect '} after block");
+        return statements;
     }
     expressionStatement() {
         let expr = this.expression();
-        this.consume(tokentype_1.TokenType.SEMICOLON, "Expect ';' adter expression.");
+        this.consume(tokentype_1.TokenType.SEMICOLON, "Expect ';' after expression.");
         return new Stmt_1.Expression(expr);
     }
     printStatement() {

@@ -25,6 +25,7 @@ defineAst(dir, "Expr", [
 ])
 
 defineAst(dir, "Stmt", [
+    "Block : statements Stmt[]",
     "Expression : expression Expr",
     "Print : expression Expr",
     "Var : name Token,initializer Expr"
@@ -80,7 +81,7 @@ function defineType(baseName, className, fields) {
     content += '    } \n\n'
 
     // visitor
-    content += `    accept(visitor: Visitor) : String {\n`
+    content += `    accept(visitor: Visitor) : Object | null {\n`
     content += `        return visitor.visit${className}${baseName}(this)\n`
     content += `    } \n\n`
 
@@ -96,7 +97,7 @@ function defineVisitor(baseName, types) {
 
     types.forEach((element) => {
         let typeName = element.split(":")[0].trim()
-        content += `    visit${typeName}${baseName}(${typeName.toLowerCase()} : ${typeName}) : String { return "" }\n`
+        content += `    visit${typeName}${baseName}(${typeName.toLowerCase()} : ${typeName}) : Object | null { return "" }\n`
     })
 
     content += "} \n\n"

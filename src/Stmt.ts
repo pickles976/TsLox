@@ -5,6 +5,19 @@ export class Stmt {
     accept(visitor: Visitor) : any { return null } 
 } 
 
+export class Block extends Stmt { 
+    statements : Stmt[] 
+    constructor(statements : Stmt[]) { 
+        super()
+        this.statements = statements; 
+    } 
+
+    accept(visitor: Visitor) : Object | null {
+        return visitor.visitBlockStmt(this)
+    } 
+
+} 
+
 export class Expression extends Stmt { 
     expression : Expr 
     constructor(expression : Expr) { 

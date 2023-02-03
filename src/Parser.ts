@@ -4,7 +4,7 @@ import { Token } from "./token";
 import { TokenType } from "./tokentype";
 import { parseError } from ".";
 import { type } from "os";
-import { Expression, Print, Stmt, Var } from "./Stmt";
+import { Block, Expression, Print, Stmt, Var } from "./Stmt";
 
 export class Parser {
 
@@ -18,7 +18,6 @@ export class Parser {
     parse() : Stmt[] {
         let statements = []
         while (!this.isAtEnd()) {
-            // statements.push(this.statement())
             statements.push(this.declaration())
         }
         return statements
@@ -51,12 +50,24 @@ export class Parser {
 
     statement() : Stmt {
         if (this.match(TokenType.PRINT)) return this.printStatement()
+        if (this.match(TokenType.LEFT_BRACE)) return new Block(this.block())
         return this.expressionStatement()
+    }
+
+    block() : Stmt[] {
+        let statements : Stmt[] = []
+
+        while(!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+            statements.push(this.declaration())
+        }
+
+        this.consume(TokenType.RIGHT_BRACE, "Expect '} after block")
+        return statements
     }
 
     expressionStatement() : Stmt {
         let expr : Expr = this.expression()
-        this.consume(TokenType.SEMICOLON, "Expect ';' adter expression.")
+        this.consume(TokenType.SEMICOLON, "Expect ';' after expression.")
         return new Expression(expr)
     }
 

@@ -34,6 +34,11 @@ class Interpreter extends Expr_1.Visitor {
         }
         return object.toString();
     }
+    visitAssignExpr(expr) {
+        let value = this.evaluate(expr.value);
+        this.environment.assign(expr.name, value);
+        return value;
+    }
     visitLiteralExpr(expr) {
         return expr.value;
     }

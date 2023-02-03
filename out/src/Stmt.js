@@ -1,10 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Var = exports.Print = exports.Expression = exports.Stmt = void 0;
+exports.Var = exports.Print = exports.Expression = exports.Block = exports.Stmt = void 0;
 class Stmt {
     accept(visitor) { return null; }
 }
 exports.Stmt = Stmt;
+class Block extends Stmt {
+    constructor(statements) {
+        super();
+        this.statements = statements;
+    }
+    accept(visitor) {
+        return visitor.visitBlockStmt(this);
+    }
+}
+exports.Block = Block;
 class Expression extends Stmt {
     constructor(expression) {
         super();

@@ -2,7 +2,7 @@ import { stringify } from "querystring";
 import { Visitor, Literal, Grouping, Expr, Unary, Binary, Variable, Assign } from "./Expr";
 import { Token } from "./token";
 import { TokenType } from "./tokentype";
-import { Expression, Print, Stmt, Var } from "./Stmt";
+import { Block, Expression, Print, Stmt, Var } from "./Stmt";
 import { Environment } from "./Environment";
 
 export class Interpreter extends Visitor {
@@ -125,6 +125,23 @@ export class Interpreter extends Visitor {
         } 
         this.environment.define(stmt.name.lexeme, value)
         return null
+    }
+
+    visitBlockStmt(stmt: Block): Object | null {
+        this.executeBlock(stmt.statements, new Environment(this.environment))
+        return null
+    }
+
+    executeBlock(statments: Stmt[], environment: Environment) {
+        let previous = this.environment
+        try {
+            this.environment = environment
+            statments.forEach((statement) => {
+                this.execute(statement)
+            })
+        } finally {
+            this.environment = previous
+        }
     }
 
     evaluate(expr: Expr) : Object {

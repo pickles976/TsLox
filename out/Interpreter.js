@@ -108,6 +108,22 @@ class Interpreter extends Expr_1.Visitor {
         this.environment.define(stmt.name.lexeme, value);
         return null;
     }
+    visitBlockStmt(stmt) {
+        this.executeBlock(stmt.statements, new Environment_1.Environment(this.environment));
+        return null;
+    }
+    executeBlock(statments, environment) {
+        let previous = this.environment;
+        try {
+            this.environment = environment;
+            statments.forEach((statement) => {
+                this.execute(statement);
+            });
+        }
+        finally {
+            this.environment = previous;
+        }
+    }
     evaluate(expr) {
         return expr.accept(this);
     }

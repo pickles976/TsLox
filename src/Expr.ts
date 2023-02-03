@@ -2,7 +2,7 @@
  * Represents a Grammar structure
  */
 
-import { Expression, Print, Var } from './Stmt'
+import { Block, Expression, Print, Var } from './Stmt'
 import { Token } from './token' 
 export class Expr {
     accept(visitor: Visitor) : any { return "" } 
@@ -10,6 +10,7 @@ export class Expr {
 
 export class Visitor { 
     constructor(){} 
+    visitBlockStmt(block : Block) : Object | null { return null }
     visitAssignExpr(assign: Assign) : Object | null { return "" }
     visitBinaryExpr(binary : Binary) : Object | null { return "" }
     visitGroupingExpr(grouping : Grouping) : Object { return "" }

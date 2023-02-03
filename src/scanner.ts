@@ -64,8 +64,8 @@ export class Scanner {
             // single char tokens
             case '(': this.addToken(TokenType.LEFT_PAREN); break;
             case ')': this.addToken(TokenType.RIGHT_PAREN); break;
-            case '{': this.addToken(TokenType.RIGHT_BRACE); break;
-            case '}': this.addToken(TokenType.LEFT_BRACE); break;
+            case '{': this.addToken(TokenType.LEFT_BRACE); break;
+            case '}': this.addToken(TokenType.RIGHT_BRACE); break;
             case ',': this.addToken(TokenType.COMMA); break;
             case '.': this.addToken(TokenType.DOT); break;
             case '-': this.addToken(TokenType.MINUS); break;

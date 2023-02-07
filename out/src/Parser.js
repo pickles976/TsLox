@@ -13,7 +13,6 @@ class Parser {
     parse() {
         let statements = [];
         while (!this.isAtEnd()) {
-            // statements.push(this.statement())
             statements.push(this.declaration());
         }
         return statements;
@@ -40,13 +39,25 @@ class Parser {
         return new Stmt_1.Var(name, initializer);
     }
     statement() {
+        if (this.match(tokentype_1.TokenType.IF))
+            return this.ifStatement();
         if (this.match(tokentype_1.TokenType.PRINT))
             return this.printStatement();
+        if (this.match(tokentype_1.TokenType.LEFT_BRACE))
+            return new Stmt_1.Block(this.block());
         return this.expressionStatement();
+    }
+    block() {
+        let statements = [];
+        while (!this.check(tokentype_1.TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+            statements.push(this.declaration());
+        }
+        this.consume(tokentype_1.TokenType.RIGHT_BRACE, "Expect '} after block");
+        return statements;
     }
     expressionStatement() {
         let expr = this.expression();
-        this.consume(tokentype_1.TokenType.SEMICOLON, "Expect ';' adter expression.");
+        this.consume(tokentype_1.TokenType.SEMICOLON, "Expect ';' after expression.");
         return new Stmt_1.Expression(expr);
     }
     printStatement() {
@@ -54,11 +65,22 @@ class Parser {
         this.consume(tokentype_1.TokenType.SEMICOLON, "Expect ';' after value.");
         return new Stmt_1.Print(value);
     }
+    ifStatement() {
+        this.consume(tokentype_1.TokenType.LEFT_PAREN, "Expect '(' after 'if'");
+        let condition = this.expression();
+        this.consume(tokentype_1.TokenType.RIGHT_PAREN, "Expect ')' after if condition");
+        let thenBranch = this.statement();
+        let elseBranch = null;
+        if (this.match(tokentype_1.TokenType.ELSE)) {
+            elseBranch = this.statement();
+        }
+        return new Stmt_1.If(condition, thenBranch, elseBranch);
+    }
     expression() {
         return this.assignment();
     }
     assignment() {
-        let expr = this.equality();
+        let expr = this.or();
         if (this.match(tokentype_1.TokenType.EQUAL)) {
             let equals = this.previous();
             let value = this.assignment();
@@ -67,6 +89,24 @@ class Parser {
                 return new Expr_1.Assign(name, value);
             }
             this.error(equals, "Invalid assignment target");
+        }
+        return expr;
+    }
+    or() {
+        let expr = this.and();
+        while (this.match(tokentype_1.TokenType.OR)) {
+            let operator = this.previous();
+            let right = this.and();
+            expr = new Expr_1.Logical(expr, operator, right);
+        }
+        return expr;
+    }
+    and() {
+        let expr = this.equality();
+        while (this.match(tokentype_1.TokenType.AND)) {
+            let operator = this.previous();
+            let right = this.equality();
+            expr = new Expr_1.Logical(expr, operator, right);
         }
         return expr;
     }

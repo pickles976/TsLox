@@ -1,8 +1,8 @@
 import { stringify } from "querystring";
-import { Visitor, Literal, Grouping, Expr, Unary, Binary, Variable, Assign } from "./Expr";
+import { Visitor, Literal, Grouping, Expr, Unary, Binary, Variable, Assign, Logical } from "./Expr";
 import { Token } from "./token";
 import { TokenType } from "./tokentype";
-import { Block, Expression, Print, Stmt, Var } from "./Stmt";
+import { Block, Expression, If, Print, Stmt, Var, While } from "./Stmt";
 import { Environment } from "./Environment";
 
 export class Interpreter extends Visitor {
@@ -47,6 +47,16 @@ export class Interpreter extends Visitor {
 
     visitLiteralExpr(expr: Literal) : Object | null {
         return expr.value
+    }
+
+    visitLogicalExpr(expr: Logical): Object | null {
+        let left : Object = this.evaluate(expr.left)
+        if (expr.operator.type == TokenType.OR) {
+            if (this.isTruthy(left)) return left
+        } else {
+            if (!this.isTruthy(left)) return left
+        }
+        return this.evaluate(expr.right)
     }
 
     visitGroupingExpr(expr: Grouping): Object {
@@ -112,6 +122,15 @@ export class Interpreter extends Visitor {
         return null
     }
 
+    visitIfStmt(stmt: If): Object | null {
+        if (this.isTruthy(this.evaluate(stmt.condition))) {
+            this.execute(stmt.thenBranch)
+        } else if (stmt.elseBranch !== null) {
+            this.execute(stmt.elseBranch)
+        }
+        return null
+    }
+
     visitPrintStmt(print: Print): null {
         let val = this.evaluate(print.expression)
         console.log(this.stringify(val))
@@ -124,6 +143,13 @@ export class Interpreter extends Visitor {
             value = this.evaluate(stmt.initializer)
         } 
         this.environment.define(stmt.name.lexeme, value)
+        return null
+    }
+
+    visitWhileStmt(stmt: While): Object | null {
+        while (this.isTruthy(this.evaluate(stmt.condition))) {
+            this.execute(stmt.body)
+        }
         return null
     }
 

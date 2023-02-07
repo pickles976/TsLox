@@ -2,7 +2,7 @@
  * Represents a Grammar structure
  */
 
-import { Block, Expression, Print, Var } from './Stmt'
+import { Block, Expression, If, Print, Var, While } from './Stmt'
 import { Token } from './token' 
 export class Expr {
     accept(visitor: Visitor) : any { return "" } 
@@ -15,9 +15,12 @@ export class Visitor {
     visitBinaryExpr(binary : Binary) : Object | null { return "" }
     visitGroupingExpr(grouping : Grouping) : Object { return "" }
     visitLiteralExpr(literal : Literal) : Object | null { return "" }
+    visitLogicalExpr(logical : Logical) : Object | null { return "" }
     visitUnaryExpr(unary : Unary) : Object | null { return "" }
     visitExpressionStmt(expression : Expression) : null { return null }
+    visitIfStmt(i : If) : Object | null { return "" }
     visitPrintStmt(print : Print) : null { return null }
+    visitWhileStmt(whl : While) : Object | null { return "" }
     visitVarStmt(variable : Var) : null { return null }
     visitVariableExpr(variable : Variable) : Object | null { return "" }
 } 
@@ -76,6 +79,23 @@ export class Literal extends Expr {
 
     accept(visitor: Visitor) : Object | null {
         return visitor.visitLiteralExpr(this)
+    } 
+
+} 
+
+export class Logical extends Expr { 
+    left : Expr 
+    operator : Token 
+    right : Expr 
+    constructor(left : Expr,operator : Token,right : Expr) { 
+        super()
+        this.left = left; 
+        this.operator = operator; 
+        this.right = right; 
+    } 
+
+    accept(visitor: Visitor) : Object | null {
+        return visitor.visitLogicalExpr(this)
     } 
 
 } 

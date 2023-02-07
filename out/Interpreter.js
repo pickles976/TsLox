@@ -42,6 +42,18 @@ class Interpreter extends Expr_1.Visitor {
     visitLiteralExpr(expr) {
         return expr.value;
     }
+    visitLogicalExpr(expr) {
+        let left = this.evaluate(expr.left);
+        if (expr.operator.type == tokentype_1.TokenType.OR) {
+            if (this.isTruthy(left))
+                return left;
+        }
+        else {
+            if (!this.isTruthy(left))
+                return left;
+        }
+        return this.evaluate(expr.right);
+    }
     visitGroupingExpr(expr) {
         return this.evaluate(expr.expression);
     }
@@ -95,6 +107,15 @@ class Interpreter extends Expr_1.Visitor {
         this.evaluate(expr.expression);
         return null;
     }
+    visitIfStmt(stmt) {
+        if (this.isTruthy(this.evaluate(stmt.condition))) {
+            this.execute(stmt.thenBranch);
+        }
+        else if (stmt.elseBranch !== null) {
+            this.execute(stmt.elseBranch);
+        }
+        return null;
+    }
     visitPrintStmt(print) {
         let val = this.evaluate(print.expression);
         console.log(this.stringify(val));
@@ -106,6 +127,12 @@ class Interpreter extends Expr_1.Visitor {
             value = this.evaluate(stmt.initializer);
         }
         this.environment.define(stmt.name.lexeme, value);
+        return null;
+    }
+    visitWhileStmt(stmt) {
+        while (this.isTruthy(this.evaluate(stmt.condition))) {
+            this.execute(stmt.body);
+        }
         return null;
     }
     visitBlockStmt(stmt) {

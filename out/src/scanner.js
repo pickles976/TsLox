@@ -56,10 +56,10 @@ class Scanner {
                 this.addToken(tokentype_1.TokenType.RIGHT_PAREN);
                 break;
             case '{':
-                this.addToken(tokentype_1.TokenType.RIGHT_BRACE);
+                this.addToken(tokentype_1.TokenType.LEFT_BRACE);
                 break;
             case '}':
-                this.addToken(tokentype_1.TokenType.LEFT_BRACE);
+                this.addToken(tokentype_1.TokenType.RIGHT_BRACE);
                 break;
             case ',':
                 this.addToken(tokentype_1.TokenType.COMMA);

@@ -123,6 +123,7 @@ export class Interpreter extends Visitor {
     }
 
     visitIfStmt(stmt: If): Object | null {
+        // console.log(this.isTruthy(this.evaluate(stmt.condition)))
         if (this.isTruthy(this.evaluate(stmt.condition))) {
             this.execute(stmt.thenBranch)
         } else if (stmt.elseBranch !== null) {
@@ -176,7 +177,7 @@ export class Interpreter extends Visitor {
 
     isTruthy(object: Object) : boolean {
         if (object == null) return false
-        if (object instanceof Boolean) return Boolean(object)
+        if (typeof object === "boolean") return Boolean(object)
         return true
     }
 

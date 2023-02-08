@@ -1,39 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Var = exports.While = exports.Print = exports.If = exports.Expression = exports.Block = exports.Visitor = exports.Stmt = void 0;
+exports.Var = exports.While = exports.Print = exports.If = exports.Expression = exports.Block = exports.Stmt = void 0;
 class Stmt {
-    accept(visitor) { return ""; }
+    accept(visitor) { return null; }
 }
 exports.Stmt = Stmt;
-class Visitor {
-    constructor() { }
-    visitBlockStmt(block) { return ""; }
-    visitExpressionStmt(expression) { return ""; }
-    visitIfStmt() { }
-}
-exports.Visitor = Visitor;
- | null;
-{
-    return "";
-}
-visitPrintStmt(print, Print);
-Object | null;
-{
-    return "";
-}
-visitWhileStmt();
-while ()
-    : While;
-Object | null;
-{
-    return "";
-}
-visitVarStmt();
-var Var, Object;
- | null;
-{
-    return "";
-}
 class Block extends Stmt {
     constructor(statements) {
         super();

@@ -108,6 +108,7 @@ class Interpreter extends Expr_1.Visitor {
         return null;
     }
     visitIfStmt(stmt) {
+        // console.log(this.isTruthy(this.evaluate(stmt.condition)))
         if (this.isTruthy(this.evaluate(stmt.condition))) {
             this.execute(stmt.thenBranch);
         }
@@ -157,7 +158,7 @@ class Interpreter extends Expr_1.Visitor {
     isTruthy(object) {
         if (object == null)
             return false;
-        if (object instanceof Boolean)
+        if (typeof object === "boolean")
             return Boolean(object);
         return true;
     }

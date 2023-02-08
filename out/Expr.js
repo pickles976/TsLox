@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * Represents a Grammar structure
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Variable = exports.Unary = exports.Logical = exports.Literal = exports.Grouping = exports.Binary = exports.Assign = exports.Visitor = exports.Expr = void 0;
 class Expr {
@@ -7,12 +10,18 @@ class Expr {
 exports.Expr = Expr;
 class Visitor {
     constructor() { }
+    visitBlockStmt(block) { return null; }
     visitAssignExpr(assign) { return ""; }
     visitBinaryExpr(binary) { return ""; }
     visitGroupingExpr(grouping) { return ""; }
     visitLiteralExpr(literal) { return ""; }
     visitLogicalExpr(logical) { return ""; }
     visitUnaryExpr(unary) { return ""; }
+    visitExpressionStmt(expression) { return null; }
+    visitIfStmt(i) { return ""; }
+    visitPrintStmt(print) { return null; }
+    visitWhileStmt(whl) { return ""; }
+    visitVarStmt(variable) { return null; }
     visitVariableExpr(variable) { return ""; }
 }
 exports.Visitor = Visitor;

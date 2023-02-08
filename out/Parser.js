@@ -46,6 +46,8 @@ class Parser {
         return new Stmt_1.While(condition, body);
     }
     statement() {
+        if (this.match(tokentype_1.TokenType.FOR))
+            return this.forStatement();
         if (this.match(tokentype_1.TokenType.IF))
             return this.ifStatement();
         if (this.match(tokentype_1.TokenType.PRINT))
@@ -55,6 +57,41 @@ class Parser {
         if (this.match(tokentype_1.TokenType.LEFT_BRACE))
             return new Stmt_1.Block(this.block());
         return this.expressionStatement();
+    }
+    forStatement() {
+        this.consume(tokentype_1.TokenType.LEFT_PAREN, "Expect '(' after 'for'");
+        let initializer = null;
+        if (this.match(tokentype_1.TokenType.SEMICOLON)) {
+            initializer = null;
+        }
+        else if (this.match(tokentype_1.TokenType.VAR)) {
+            initializer = this.varDeclaration();
+        }
+        else {
+            initializer = this.expressionStatement();
+        }
+        let condition = null;
+        if (!this.check(tokentype_1.TokenType.SEMICOLON)) {
+            condition = this.expression();
+        }
+        this.consume(tokentype_1.TokenType.SEMICOLON, "Epect ';' after loop condition");
+        let increment = null;
+        if (!this.check(tokentype_1.TokenType.RIGHT_PAREN)) {
+            increment = this.expression();
+        }
+        this.consume(tokentype_1.TokenType.RIGHT_PAREN, "Expect ')' after for clauses");
+        let body = this.statement();
+        if (increment != null) {
+            body = new Stmt_1.Block([body, new Stmt_1.Expression(increment)]);
+        }
+        if (condition === null) {
+            condition = new Expr_1.Literal(true);
+        }
+        body = new Stmt_1.While(condition, body);
+        if (initializer != null) {
+            body = new Stmt_1.Block([initializer, body]);
+        }
+        return body;
     }
     block() {
         let statements = [];
